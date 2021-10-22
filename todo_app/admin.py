@@ -5,6 +5,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 class UserAdmin(BaseUserAdmin):
     ordering = ('email',)
+    list_filter = ('is_admin',)
 
 admin.site.register(Note)
 admin.site.register(User, UserAdmin)

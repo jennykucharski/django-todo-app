@@ -35,7 +35,7 @@ $This project is an API To Do List built from the Django framework + DRF
        http://localhost:port/api/notes/<int:pk>/
 </ul>
 
-## After successful installation execute the following commands:
+      After successful installation execute the following commands:
 
       ```
       $python manage.py migrate

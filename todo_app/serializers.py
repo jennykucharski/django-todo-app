@@ -7,11 +7,11 @@ User = get_user_model()
 
 
 class NoteSerializer(serializers.ModelSerializer):
-    # owner = serializers.ReadOnlyField(source='owner.email')
+    owner = serializers.ReadOnlyField(source='owner.email')
     class Meta:
         model = Note
         fields = ['id', 'name', 'content', 'created_at', 'modified_at', 'owner']
-
+        
     def create(self, validated_data):
         """
         Create and return a new `Note` instance, given the validated data.

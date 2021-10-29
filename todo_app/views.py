@@ -15,9 +15,9 @@ class NoteList(generics.ListCreateAPIView):
     serializer_class = NoteSerializer
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        serializer.save(created_by=self.request.user)
     def get_queryset(self):
-        return Note.objects.filter(owner=self.request.user.pk)
+        return Note.objects.filter(created_by=self.request.user.pk)
         
 
 

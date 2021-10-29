@@ -12,19 +12,18 @@ class User(AbstractUser):
 
 class Base(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.CharField(max_length=200)
     modified_at = models.DateTimeField(auto_now=True)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='notes',
+        on_delete=models.CASCADE
+    )
 
     class Meta:
         abstract = True
 
 
 class Note(Base):
-    owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        related_name='notes',
-        on_delete=models.CASCADE
-    )
     name  = models.CharField(max_length=100, blank=True, default='')
     content = models.TextField()
 

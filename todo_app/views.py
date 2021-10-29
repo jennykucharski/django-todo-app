@@ -11,6 +11,10 @@ User = get_user_model()
  
 
 class NoteList(generics.ListCreateAPIView):
+    """
+    List all notes, or create a new note.
+    """
+    
     permission_classes = [permissions.IsAuthenticated, IsOwner]
     serializer_class = NoteSerializer
 
@@ -22,6 +26,10 @@ class NoteList(generics.ListCreateAPIView):
 
 
 class NoteDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Retrieve, update or delete a note instance.
+    """
+
     permission_classes = [permissions.IsAuthenticated, IsOwner]
 
     queryset = Note.objects.all()

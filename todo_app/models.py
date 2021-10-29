@@ -5,8 +5,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
 class User(AbstractUser):
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
+    # first_name = models.CharField(max_length=255)
+    # last_name = models.CharField(max_length=255)
     date_of_birth = models.DateField(blank=True, null=True)
 
 

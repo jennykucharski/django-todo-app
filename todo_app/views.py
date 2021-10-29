@@ -11,7 +11,7 @@ User = get_user_model()
  
 
 class NoteList(generics.ListCreateAPIView):
-    permission_classes = [IsOwner]
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
     serializer_class = NoteSerializer
 
     def perform_create(self, serializer):

@@ -7,6 +7,5 @@ class IsOwner(permissions.BasePermission):
     """
 
     def has_object_permission(self, request, view, obj):
-        # Write permissions are only allowed to the owner of the snippet.
+        # Write permissions are only allowed to the owner of the notes  .
         return obj.created_by == request.user
-        

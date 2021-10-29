@@ -1,6 +1,11 @@
 from django.urls import path,include
 from todo_app import views
+
 from rest_framework.urlpatterns import format_suffix_patterns
+
+
+# router = routers.DefaultRouter()
+# router.register('todos', views.NoteViewSet)
 
 urlpatterns = [
     path('notes/', views.NoteList.as_view()),

@@ -17,7 +17,12 @@ from django.contrib import admin
 from django.urls import path, include
 
 
+
+# router = routers.DefaultRouter
+# router.registry.extend(router.registry)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('todo_app.urls')),
+    # path('', include(router.urls)),
 ]

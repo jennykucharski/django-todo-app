@@ -1,36 +1,71 @@
 
 # Create your views here.
-from todo_app.models import Note
+from .models import Note
+from .serializers import NoteSerializer
+from django.http import Http404
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from todo_app.serializers import NoteSerializer
-from rest_framework import generics
-from django.contrib.auth import get_user_model
 from rest_framework import permissions
+from django.shortcuts import get_object_or_404
 from todo_app.permissions import IsOwner
 
-User = get_user_model()
- 
 
-class NoteList(generics.ListCreateAPIView):
+ 
+class NoteList(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
     """
-    List all notes, or create a new note.
+    List all notes, or create a new notes.
     """
     
-    permission_classes = [permissions.IsAuthenticated, IsOwner]
-    serializer_class = NoteSerializer
+    def get_object(self):
+        obj = get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
+        return obj
 
-    def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user)
-    def get_queryset(self):
-        return Note.objects.filter(created_by=self.request.user.pk)
+
+    def get(self, request, format=None):
+        notes = Note.objects.filter(created_by=request.user)
+        serializer = NoteSerializer(notes, many=True)
+        return Response(serializer.data)
+
+
+    def post(self, request, format=None):
+        serializer = NoteSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class NoteDetail(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
+    """
+    Retrieve, update or delete a notes instance.
+    """
+    def get_object(self, pk, owner):
+
+        try:
+            return Note.objects.get(pk=pk, created_by=owner)
+        except Note.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        notes = self.get_object(pk)
+        serializer = NoteSerializer(notes)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        notes = self.get_object(pk)
+        serializer = NoteSerializer(notes, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        notes = self.get_object(pk)
+        notes.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
         
-
-
-class NoteDetail(generics.RetrieveUpdateDestroyAPIView):
-    """
-    Retrieve, update or delete a note instance.
-    """
-
-    permission_classes = [permissions.IsAuthenticated, IsOwner]
-
-    queryset = Note.objects.all()
-    serializer_class = NoteSerializer

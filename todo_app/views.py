@@ -15,10 +15,11 @@ from todo_app.permissions import IsOwner
  
 class NoteList(APIView):
     permission_classes = [permissions.IsAuthenticated, IsOwner]
+    
     """
     List all notes, or create a new notes.
     """
-    
+
     def get_object(self):
         obj = get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
         return obj
@@ -45,7 +46,6 @@ class NoteDetail(APIView):
     Retrieve, update or delete a notes instance.
     """
     def get_object(self, pk, owner):
-
         try:
             return Note.objects.get(pk=pk, created_by=owner)
         except Note.DoesNotExist:
@@ -68,4 +68,3 @@ class NoteDetail(APIView):
         notes = self.get_object(pk)
         notes.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-        
